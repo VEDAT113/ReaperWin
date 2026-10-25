@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>REAPER BANK — Control Your Digital Wealth</title>
+<link rel="icon" id="fav" href="data:,">
+<style>
+:root{--bg:#050505;--bg2:#0B0B0D;--card:#111114;--el:#17171B;--tx:#fff;--mu:#A1A1AA;--bd:#27272A;--up:#34D399;--dn:#F87171;--ac:#E5E7EB;color-scheme:dark}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--tx);font:14px/1.5 Inter,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+.app{display:flex;min-height:100vh}
+aside{width:236px;background:var(--bg2);border-right:1px solid var(--bd);padding:20px 14px;position:fixed;inset:0 auto 0 0;display:flex;flex-direction:column;gap:4px;z-index:30;transition:transform .25s}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 18px;font-weight:800;letter-spacing:.14em}
+.brand small{display:block;font-size:8px;color:var(--mu);letter-spacing:.2em;font-weight:500}
+.nav{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;color:var(--mu);text-align:left;width:100%;min-height:44px;transition:.2s}
+.nav:hover{background:var(--el);color:#fff}.nav.on{background:#fff;color:#000;font-weight:600}
+main{--px:28px;margin-left:236px;flex:1;min-width:0;padding:0 var(--px) 40px}
+header{display:flex;align-items:center;gap:12px;padding:18px 0;position:sticky;top:0;background:rgba(5,5,5,.9);backdrop-filter:blur(10px);z-index:20}
+header h1{font-size:22px;flex:1}
+.burger{display:none}
+.in{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;width:100%;min-height:42px;outline:0}
+.in:focus,.btn:focus-visible,.nav:focus-visible{border-color:#fff;outline:2px solid #fff;outline-offset:1px}
+.search{max-width:260px}
+.btn{background:#fff;color:#000;border-radius:12px;padding:10px 16px;font-weight:600;min-height:42px;transition:.15s}
+.btn:active{transform:scale(.97)}.btn.g{background:var(--el);color:#fff;border:1px solid var(--bd)}
+.btn.sm{padding:6px 10px;min-height:32px;font-size:12px}
+.ic{width:42px;height:42px;border-radius:12px;background:var(--card);border:1px solid var(--bd);display:grid;place-items:center;position:relative}
+.dot{position:absolute;top:8px;right:9px;width:8px;height:8px;border-radius:50%;background:var(--dn)}
+.badge{border:1px solid var(--bd);border-radius:99px;padding:3px 10px;font-size:11px;color:var(--mu);white-space:nowrap}
+.badge i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--up);margin-right:6px}
+.grid{display:grid;gap:16px}.g2{grid-template-columns:2fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g6{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:20px;transition:.2s;animation:fade .3s}
+.card:hover{border-color:#3f3f46}.card.gl{background:rgba(23,23,27,.7);backdrop-filter:blur(12px)}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.mu{color:var(--mu)}.up{color:var(--up)}.dn{color:var(--dn)}.big{font-size:40px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.row{display:flex;align-items:center;gap:12px}.sp{justify-content:space-between}.wrap{flex-wrap:wrap}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}.tabs button{padding:5px 10px;border-radius:8px;color:var(--mu);font-size:12px}.tabs .on{background:#fff;color:#000}
+.qa{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.qa button{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;min-height:76px;transition:.2s}
+.qa button:hover{background:var(--el);transform:translateY(-2px)}
+.tr{display:grid;grid-template-columns:2fr 1fr 1.2fr 1.2fr 1fr auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid var(--bd)}
+.tr.h{color:var(--mu);font-size:12px}
+.mk{grid-template-columns:.4fr 2fr 1.2fr 1fr 1.3fr 1.3fr 90px}
+.pill{padding:2px 9px;border-radius:99px;font-size:11px;background:var(--el);border:1px solid var(--bd)}
+.coin{width:34px;height:34px;border-radius:50%;background:#fff;color:#000;display:grid;place-items:center;font-weight:800;font-size:11px;flex:none}
+.modalbg{position:fixed;inset:0;background:rgba(0,0,0,.75);display:grid;place-items:center;z-index:50;padding:16px;animation:fade .2s}
+.modal{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:24px;width:100%;max-width:440px;max-height:90vh;overflow:auto}
+.modal label{display:block;margin:12px 0 4px;color:var(--mu);font-size:12px}
+.warn{background:var(--el);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;font-size:12px;color:var(--mu);margin-top:12px}
+.err{color:var(--dn);font-size:12px;margin-top:6px;min-height:16px}
+.pop{position:absolute;right:0;top:50px;width:320px;background:var(--el);border:1px solid var(--bd);border-radius:16px;padding:12px;z-index:40;box-shadow:0 20px 50px #000}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#fff;color:#000;padding:10px 18px;border-radius:12px;font-weight:600;z-index:90}
+.ccard{aspect-ratio:1.586;max-width:380px;border-radius:20px;padding:22px;background:linear-gradient(135deg,#1c1c20,#050505 60%,#222);border:1px solid #3f3f46;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 20px 40px #000;transition:.3s}
+.ccard.fz{filter:grayscale(1) brightness(.5)}
+.bar{height:8px;border-radius:4px;background:#fff}
+svg{max-width:100%}
+.login{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+.login .l{background:#000;display:grid;place-items:center;border-right:1px solid var(--bd);padding:30px;text-align:center}
+.login .r{display:grid;place-items:center;padding:24px}
+.sk{background:linear-gradient(90deg,var(--card),var(--el),var(--card));background-size:200% 100%;animation:sh 1.2s infinite;border-radius:12px;height:80px}
+@keyframes sh{to{background-position:-200% 0}}
+@media(max-width:1024px){.g2,.g3{grid-template-columns:1fr}.qa{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:820px){aside{transform:translateX(-100%)}aside.open{transform:none}main{margin-left:0;--px:14px;padding:0 14px 40px}.burger{display:grid}.search{display:none}.login{grid-template-columns:1fr}.login .l{display:none}
+.tr,.mk{grid-template-columns:1fr 1fr;row-gap:4px;background:var(--bg2);border:1px solid var(--bd);border-radius:14px;padding:12px;margin-bottom:8px}.tr.h{display:none}.big{font-size:32px}.hm{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+body{font-feature-settings:"tnum","cv11";-webkit-font-smoothing:antialiased}
+.card{background:linear-gradient(180deg,#141418,#0E0E11);box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 10px 30px rgba(0,0,0,.4)}
+.card.gl{background:linear-gradient(135deg,rgba(30,30,36,.85),rgba(12,12,15,.9))}
+header{border-bottom:1px solid var(--bd);margin:0 calc(-1*var(--px)) 22px;padding:14px var(--px)}
+header h1{font-size:18px;letter-spacing:.01em}
+.nav.on{box-shadow:0 4px 18px rgba(255,255,255,.12)}
+.tr:not(.h){transition:background .15s}.tr:not(.h):hover{background:rgba(255,255,255,.03)}
+.pill.ok{color:var(--up);border-color:rgba(52,211,153,.3);background:rgba(52,211,153,.08)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.kpi span{display:block;color:var(--mu);font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+.kpi b{font-size:22px;letter-spacing:-.01em}
+.ucard{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--bd);border-radius:14px;background:var(--card);margin:8px 0}
+.av{width:34px;height:34px;border-radius:50%;background:#fff;color:#000;display:grid;place-items:center;font-weight:800;font-size:12px}
+.foot{margin-top:36px;padding-top:18px;border-top:1px solid var(--bd);color:var(--mu);font-size:12px;display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#27272A;border-radius:6px}
+@media(max-width:1024px){.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:820px){header{padding:12px var(--px)}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
+const LOGO=(z=32)=>`<svg xmlns="http://www.w3.org/2000/svg" width="${z}" height="${z}" viewBox="0 0 64 64" fill="none" stroke-linejoin="round" stroke-linecap="round" role="img" aria-label="Reaper Bank logosu"><rect width="64" height="64" rx="15" fill="#050505"/><rect x=".75" y=".75" width="62.5" height="62.5" rx="14.5" stroke="#fff" stroke-opacity=".18" stroke-width="1.5"/><path d="M54 6L14 60" stroke="#E5E7EB" stroke-width="2.2"/><path d="M54 6C46 3 37 7 31 15C40 11 48 11 54 6Z" fill="#fff"/><path d="M32 6L46 18L50 40L44 56L32 50L20 56L14 40L18 18Z" fill="#050505" stroke="#fff" stroke-width="2.4"/><path d="M32 12L42 20L45 38L40 49L32 45L24 49L19 38L22 20Z" stroke="#fff" stroke-opacity=".3" stroke-width="1"/><path d="M32 20C25 20 22 25 22 30C22 34 24 36 25 38V43H39V38C40 36 42 34 42 30C42 25 39 20 32 20Z" fill="#fff"/><path d="M25.5 29L30.5 31.5L27 34.5Z" fill="#050505"/><path d="M38.5 29L33.5 31.5L37 34.5Z" fill="#050505"/><path d="M32 34L30.4 37.5H33.6Z" fill="#050505"/><path d="M28.5 40V43M32 40V43M35.5 40V43" stroke="#050505" stroke-width="1.2"/></svg>`;
+document.getElementById('fav').href='data:image/svg+xml,'+encodeURIComponent(LOGO(64));
+/* DEMO verisi: gerçek piyasa fiyatı DEĞİLDİR */
+const COINS=[
+['BTC','Bitcoin',67000,2.4,11.2,1.32e12,3.1e10,'İlk ve en büyük kripto para birimi; merkeziyetsiz, sınırlı arzlı dijital değer saklama aracı.'],
+['ETH','Ethereum',3400,1.1,6.4,4.1e11,1.6e10,'Akıllı sözleşmeleri çalıştıran programlanabilir blokzincir ağı.'],
+['SOL','Solana',160,-3.2,18.5,7.2e10,3.2e9,'Yüksek hızlı, düşük ücretli blokzincir platformu.'],
+['XRP','XRP',0.55,-0.8,-2.1,3.0e10,1.1e9,'Hızlı ve düşük maliyetli sınır ötesi ödemeler için tasarlanmış ağ.'],
+['USDT','Tether',1,0.0,0.0,1.1e11,5.0e10,'ABD dolarına endekslenmiş stabil coin.'],
+['BNB','BNB',580,0.9,4.7,8.5e10,1.5e9,'BNB Chain ekosisteminin yerel varlığı.']
+].map(a=>({s:a[0],n:a[1],p:a[2],c:a[3],m:a[4],cap:a[5],vol:a[6],d:a[7]}));
+const cp=s=>s==='USD'?1:COINS.find(c=>c.s===s).p;
+const FEE=0.005, KEY='reaper_demo_v1';
+const seed0=()=>({bal:{USD:12450.75,BTC:0.4215,ETH:3.2,SOL:25,XRP:1500,USDT:2000,BNB:4},fav:['BTC','ETH'],frozen:false,hide:false,cardHide:true,
+tx:[
+{id:1005,t:'Buy',a:'BTC',q:0.05,u:3350,d:Date.now()-864e5*1,s:'Completed'},
+{id:1004,t:'Swap',a:'ETH',q:1,u:3400,d:Date.now()-864e5*3,s:'Completed'},
+{id:1003,t:'Sell',a:'SOL',q:10,u:1600,d:Date.now()-864e5*6,s:'Completed'},
+{id:1002,t:'Receive',a:'USDT',q:500,u:500,d:Date.now()-864e5*9,s:'Completed'},
+{id:1001,t:'Send',a:'XRP',q:200,u:110,d:Date.now()-864e5*14,s:'Completed'}],
+notif:[{m:'Demo alış işlemi: 0.05 BTC (gerçek para hareketi yok)',r:0},{m:'Portföyünüz demo verilerde %1.8 yükseldi',r:0},{m:'Sistem: Bu uygulama bir DEMO arayüzdür',r:0}]});
+let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!S||!S.bal)S=seed0();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+let auth=false,page='overview',range='1M',sortK='cap',sortD=-1,sel=null,pop=null;
+let live=false,liveT='',aper='W';const DEMO0=COINS.map(c=>({p:c.p,c:c.c}));
+const IDS={BTC:'bitcoin',ETH:'ethereum',SOL:'solana',XRP:'ripple',USDT:'tether',BNB:'binancecoin'};
+async function fetchLive(silent){const ac=new AbortController(),to=setTimeout(()=>ac.abort(),8000);
+try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids='+Object.values(IDS).join(',')+'&vs_currencies=usd&include_24hr_change=true',{signal:ac.signal});
+if(!r.ok)throw new Error('HTTP '+r.status);const j=await r.json();
+const nv=COINS.map(c=>{const d=j[IDS[c.s]];if(!d||typeof d.usd!=='number')throw new Error('Eksik veri');return [d.usd,+(d.usd_24h_change||0)]});
+COINS.forEach((c,i)=>{c.p=nv[i][0];c.c=nv[i][1]});live=true;liveT=new Date().toLocaleTimeString('tr-TR');render();if(!silent)toast('Canlı fiyat bağlandı (CoinGecko)')}
+catch(e){setLive(false,true);toast('Canlı veri alınamadı, demo moda dönüldü: '+(e.name==='AbortError'?'zaman aşımı':e.message))}
+finally{clearTimeout(to)}}
+function setLive(on,quiet){if(on){fetchLive();return}COINS.forEach((c,i)=>{c.p=DEMO0[i].p;c.c=DEMO0[i].c});live=false;render();if(!quiet)toast('Demo moda dönüldü')}
+setInterval(()=>{if(live)fetchLive(true)},60000);
+const CFG=window.REAPER_CONFIG||{};let user=null,sb=null,guest=false;
+try{if(window.supabase&&CFG.SUPABASE_URL&&CFG.SUPABASE_ANON_KEY)sb=window.supabase.createClient(CFG.SUPABASE_URL,CFG.SUPABASE_ANON_KEY)}catch(e){}
+const uname=()=>user?((user.user_metadata&&(user.user_metadata.full_name||user.user_metadata.name||user.user_metadata.user_name))||(user.email||'Kullanıcı').split('@')[0]):'Demo Kullanıcı';
+const uini=()=>uname().slice(0,2).toUpperCase();
+const money=(n,d=2)=>'$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const hid=t=>S.hide?'••••••':t;
+const total=()=>Object.entries(S.bal).reduce((a,[k,v])=>a+v*cp(k),0);
+const rng=s=>()=>(s=s*16807%2147483647)/2147483647;
+function series(n,end,vol,seed,drift){const r=rng(seed),a=[end];for(let i=1;i<n;i++)a.unshift(a[0]/(1+(r()-.5)*vol+drift));return a}
+function line(v,w,h,col){const mn=Math.min(...v),mx=Math.max(...v),sp=mx-mn||1;
+const pts=v.map((y,i)=>[i/(v.length-1)*w,h-4-(y-mn)/sp*(h-8)]);
+const d=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join('');
+return `<path d="${d}L${w} ${h}L0 ${h}Z" fill="${col}" opacity=".08"/><path d="${d}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round"/>`}
+const spark=(c,seed)=>{const v=series(20,100,.06,seed,c.c>=0?.004:-.004);return `<svg width="90" height="30" viewBox="0 0 90 30" aria-hidden="true">${line(v,90,30,c.c>=0?'#34D399':'#F87171')}</svg>`};
+const chg=x=>`<span class="${x>=0?'up':'dn'}">${x>=0?'+':''}${x.toFixed(2)}%</span>`;
+const ico={ov:'M3 12l9-8 9 8v8H3z',wl:'M3 7h18v12H3zM16 13h2',mk:'M3 17l6-6 4 4 8-9',tr:'M7 4v16M7 20l-3-3M17 20V4M17 4l3 3',tx:'M4 6h16M4 12h16M4 18h10',an:'M5 20V10M12 20V4M19 20v-7',cd:'M3 6h18v12H3zM3 10h18',st:'M12 8a4 4 0 100 8 4 4 0 000-8zM12 2v3M12 19v3M2 12h3M19 12h3',hp:'M12 17v.01M9.5 9a2.5 2.5 0 115 0c0 2-2.5 2-2.5 4M12 21a9 9 0 110-18 9 9 0 010 18z',bell:'M6 8a6 6 0 1112 0c0 7 3 8 3 8H3s3-1 3-8M10 21h4',menu:'M4 6h16M4 12h16M4 18h16',eye:'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 9a3 3 0 100 6 3 3 0 000-6z',star:'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z',pl:'M12 5v14M5 12h14',up:'M12 19V5M5 12l7-7 7 7',dl:'M12 5v14M5 12l7 7 7-7',dn2:'M12 3v12M7 10l5 5 5-5M4 20h16',sw:'M4 8h14l-3-3M20 16H6l3 3',out:'M9 21H5V3h4M16 17l5-5-5-5M21 12H9'};
+const I=(k,z=18)=>`<svg width="${z}" height="${z}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${ico[k]}"/></svg>`;
+const NAV=[['overview','Overview','ov'],['wallet','My Wallet','wl'],['markets','Crypto Markets','mk'],['trade','Trade','tr'],['transactions','Transactions','tx'],['analytics','Analytics','an'],['cards','Cards','cd'],['settings','Settings','st'],['help','Help Center','hp']];
+function toast(m){const t=document.createElement('div');t.className='toast';t.setAttribute('role','status');t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2200)}
+function addTx(t,a,q,u,m){S.tx.unshift({id:Date.now(),t,a,q,u,d:Date.now(),s:'Completed (Demo)'});S.notif.unshift({m:m+' (demo, gerçek para hareketi yok)',r:0});save()}
+
+/* ---------- LOGIN ---------- */
+let reg=false;
+function loginView(){return `<div class="login"><div class="l"><div>${LOGO(160)}<h2 style="letter-spacing:.2em;margin-top:20px">REAPER BANK</h2><p class="mu" style="letter-spacing:.18em;margin-top:6px">CONTROL YOUR DIGITAL WEALTH</p></div></div>
+<div class="r"><div style="width:100%;max-width:380px"><div class="row" style="margin-bottom:20px">${LOGO(36)}<b style="letter-spacing:.14em">REAPER BANK</b></div>
+<h1 style="font-size:28px">${reg?'Hesap oluştur':'Giriş yap'}</h1>
+${sb?'<div class="warn">Giriş, Supabase Auth üzerinden gerçek kimlik doğrulamadır; şifreniz bu uygulamada saklanmaz. Finansal veriler demodur.</div>':'<div class="warn" style="color:#F87171">Kimlik doğrulama yapılandırılmadı. config.js içine Supabase URL ve anon key girin (README bölüm 8). Giriş yapılamaz.</div>'}
+<div id="lf">
+<label for="em" class="mu" style="display:block;margin-top:14px;font-size:12px">E-posta</label><input id="em" class="in" type="email" autocomplete="off">
+<label for="pw" class="mu" style="display:block;margin-top:12px;font-size:12px">Şifre (en az 8 karakter)</label>
+<div class="row"><input id="pw" class="in" type="password" autocomplete="off"><button type="button" class="btn g sm" data-a="showpw">Göster</button></div>
+<div class="err" id="le" role="alert"></div>
+<div style="margin:8px 0 14px"><a href="#" data-a="forgot" class="mu">Şifremi unuttum</a></div>
+<button type="button" class="btn" data-a="login" style="width:100%">${reg?'Hesap oluştur':'Giriş yap'}</button></div>
+<div class="row" style="margin:14px 0"><button class="btn g" style="flex:1" data-a="oauth" data-p="google">Google ile devam et</button><button class="btn g" style="flex:1" data-a="oauth" data-p="github">GitHub ile devam et</button></div>
+<p class="mu" style="text-align:center"><a href="#" data-a="togreg">${reg?'Zaten hesabım var':'Hesap oluştur'}</a></p>${sb?'':'<p class="mu" style="text-align:center;margin-top:8px"><a href="#" data-a="guest">Demo olarak incele (giriş yapmadan)</a></p>'}</div></div></div>`}
+
+/* ---------- SHELL ---------- */
+function shell(){const unread=S.notif.filter(n=>!n.r).length;
+return `<div class="app"><aside id="sb"><div class="brand">${LOGO(34)}<div>REAPER<small>BANK</small></div></div>
+${NAV.map(n=>`<button class="nav ${page===n[0]?'on':''}" data-a="go" data-p="${n[0]}">${I(n[2])}${n[1]}</button>`).join('')}
+<div style="flex:1"></div><div class="ucard"><span class="av">${esc(uini())}</span><div><b>${esc(uname())}</b><div class="mu" style="font-size:11px">${user?'Doğrulanmış oturum':'Demo hesap'}</div></div></div><button class="nav" data-a="logout">${I('out')}Oturumu kapat</button></aside>
+<main><header><button class="ic burger" data-a="sb" aria-label="Menü">${I('menu')}</button><h1>${NAV.find(n=>n[0]===page)[1]}</h1>
+<input class="in search" id="gs" placeholder="Coin ara..." aria-label="Ara"><span class="badge hm" style="${live?'color:#34D399;border-color:rgba(52,211,153,.4)':''}"><i></i>${live?'CANLI FİYAT · '+liveT:'DEMO MODU'}</span>
+<div style="position:relative"><button class="ic" data-a="notif" aria-label="Bildirimler">${I('bell')}${unread?'<span class="dot"></span>':''}</button>${pop==='n'?notifPop():''}</div>
+<button class="ic hm" data-a="go" data-p="help" aria-label="Yardım">${I('hp')}</button>
+<div style="position:relative"><button class="ic" data-a="prof" aria-label="Profil">${esc(uini())}</button>${pop==='p'?`<div class="pop"><b>${esc(uname())}</b><p class="mu">${esc(user?user.email||'':'demo@reaper.bank')}</p><div class="row" style="margin-top:10px"><button class="btn g sm" data-a="go" data-p="settings">Ayarlar</button><button class="btn g sm" data-a="logout">Çıkış</button></div></div>`:''}</div></header>
+<div id="view"></div><footer class="foot"><span>© 2026 REAPER BANK · Demo arayüz</span><span>REAPER BANK lisanslı bir finans kuruluşu değildir. Tüm bakiye, fiyat ve işlemler simülasyondur; yatırım tavsiyesi içermez.</span></footer></main></div>`}
+function notifPop(){return `<div class="pop"><div class="row sp"><b>Bildirimler</b><button class="btn g sm" data-a="readall">Tümünü okundu say</button></div>${S.notif.slice(0,8).map((n,i)=>`<div style="padding:8px 0;border-bottom:1px solid var(--bd);${n.r?'color:var(--mu)':''}">${n.r?'':'● '}${esc(n.m)}</div>`).join('')||'<p class="mu">Bildirim yok</p>'}</div>`}
+
+/* ---------- VIEWS ---------- */
+function chartCard(){const R={'1D':[24,.01,1],'1W':[28,.02,7],'1M':[30,.03,30],'3M':[45,.05,90],'1Y':[52,.09,365],'ALL':[60,.14,900]}[range];
+const v=series(R[0],total(),R[1],R[2]*7+3,.0015);window._cv=v;window._cd=R[2];
+const up=v[v.length-1]>=v[0],col=up?'#34D399':'#F87171',pc=(v[v.length-1]/v[0]-1)*100;
+return `<div class="card"><div class="row sp wrap"><div><b>Portfolio Overview</b><div class="mu">Dönem: ${chg(pc)} <span class="pill">demo veri</span></div></div>
+<div class="tabs">${['1D','1W','1M','3M','1Y','ALL'].map(r=>`<button class="${r===range?'on':''}" data-a="range" data-r="${r}">${r}</button>`).join('')}</div></div>
+<div id="tip" class="mu" style="height:22px;margin-top:8px">İmleci grafik üzerinde gezdirin</div>
+<svg id="pc" viewBox="0 0 600 220" width="100%" preserveAspectRatio="none" style="height:220px;touch-action:none" role="img" aria-label="Portföy grafiği">${line(v,600,220,col)}<line id="cl" y1="0" y2="220" stroke="#fff" opacity="0" /></svg></div>`}
+function donut(){const ent=Object.entries(S.bal).map(([k,v])=>[k,v*cp(k)]).filter(e=>e[1]>0),tt=ent.reduce((a,e)=>a+e[1],0);
+const cols=['#fff','#d4d4d8','#a1a1aa','#71717a','#52525b','#3f3f46','#27272a'];let off=0;
+const arcs=ent.map((e,i)=>{const f=e[1]/tt*100,s=`<circle r="15.9" cx="21" cy="21" fill="none" stroke="${cols[i]}" stroke-width="6" stroke-dasharray="${f} ${100-f}" stroke-dashoffset="${25-off}"/>`;off+=f;return s}).join('');
+return `<div class="row wrap"><svg width="140" height="140" viewBox="0 0 42 42" role="img" aria-label="Varlık dağılımı">${arcs}</svg><div style="flex:1;min-width:140px">${ent.map((e,i)=>`<div class="row sp"><span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${cols[i]};margin-right:6px"></span>${e[0]}</span><span class="mu">${(e[1]/tt*100).toFixed(1)}% · ${hid(money(e[1],0))}</span></div>`).join('')}</div></div>`}
+const QA=[['Add Funds','pl','add'],['Send','up','send'],['Receive','dl','recv'],['Buy Crypto','pl','buy'],['Sell Crypto','dn2','sell'],['Swap','sw','swap']];
+const qa=()=>`<div class="qa">${QA.map(q=>`<button data-a="act" data-k="${q[2]}">${I(q[1],20)}<span>${q[0]}</span></button>`).join('')}</div>`;
+function txRow(t){return `<div class="tr"><div class="row"><span class="coin">${t.a}</span><div><b>${t.t}</b><div class="mu">${t.a}</div></div></div><span class="mu hm">${new Date(t.d).toLocaleDateString('tr-TR')}</span><span>${t.q} ${t.a}</span><span>${money(t.u)}</span><span class="pill ok">${esc(t.s)}</span><button class="btn g sm" data-a="txd" data-id="${t.id}">Detay</button></div>`}
+function marketGrid(){return `<div class="grid g6">${COINS.map(c=>`<div class="card" style="padding:14px"><div class="row"><span class="coin">${c.s}</span><b>${c.n}</b></div><div style="margin-top:8px;font-weight:700">${money(c.p,c.p<10?3:0)}</div>${chg(c.c)}<div>${spark(c,c.s.charCodeAt(0)*13)}</div></div>`).join('')}</div><p class="mu" style="margin-top:6px">${live?'Fiyat ve 24s değişim CoinGecko üzerinden canlıdır; mini grafikler, geçmiş serileri, bakiyeler ve işlemler simülasyondur.':'Tüm fiyatlar DEMO örnek verisidir; gerçek piyasa verisi değildir.'}</p>`}
+function barCard(){const W=aper==='W',n=W?8:6,ms=(W?7:30)*864e5,b=[];
+for(let i=n-1;i>=0;i--){const e=Date.now()-i*ms,st=e-ms,l=S.tx.filter(x=>x.d>st&&x.d<=e);b.push({v:l.reduce((a,x)=>a+x.u,0),c:l.length,l:new Date(e).toLocaleDateString('tr-TR',W?{day:'2-digit',month:'2-digit'}:{month:'short'})})}
+const mx=Math.max(1,...b.map(x=>x.v)),bw=600/n;
+return `<div class="card" style="margin-top:16px"><div class="row sp wrap"><b>İşlem hacmi (${W?'haftalık':'aylık'})</b><div class="tabs"><button class="${W?'on':''}" data-a="aper" data-v="W">Haftalık</button><button class="${W?'':'on'}" data-a="aper" data-v="M">Aylık</button></div></div>
+<svg viewBox="0 0 600 190" width="100%" style="margin-top:12px" role="img" aria-label="İşlem hacmi grafiği">${b.map((x,i)=>{const h=x.v/mx*130;return `<rect x="${i*bw+bw*.2}" y="${150-h}" width="${bw*.6}" height="${Math.max(h,2)}" rx="5" fill="#fff" opacity="${x.v?1:.2}"/><text x="${i*bw+bw/2}" y="172" fill="#A1A1AA" font-size="12" text-anchor="middle">${x.l}</text>${x.v?`<text x="${i*bw+bw/2}" y="${144-h}" fill="#fff" font-size="11" text-anchor="middle">${money(x.v,0)}</text>`:''}`}).join('')}</svg>
+<p class="mu">Toplam ${b.reduce((a,x)=>a+x.c,0)} işlem · ${money(b.reduce((a,x)=>a+x.v,0),0)} hacim (demo işlemler).</p></div>`}
+const V={
+overview(){const us=S.bal.USD,cr=total()-us;return `<div class="row sp wrap" style="margin-bottom:16px"><div><h2 style="font-size:26px;letter-spacing:-.02em">Hoş geldiniz, ${esc(uname())}</h2><div class="mu">${new Date().toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long',year:'numeric'})} · Demo hesap no: DEMO-0000-0001</div></div><span class="badge"><i></i>Piyasa verisi: ${live?'Canlı (CoinGecko)':'Demo'}</span></div>
+<div class="grid g4" style="margin-bottom:16px">${[['Kullanılabilir USD',hid(money(us))],['Kripto varlık değeri',hid(money(cr))],['24 saat değişim (demo)',chg(1.84)],['Toplam işlem',S.tx.length]].map(k=>`<div class="card kpi"><span>${k[0]}</span><b>${k[1]}</b></div>`).join('')}</div>
+<div class="grid g2"><div class="card gl"><div class="row sp"><span class="mu">Total Balance <span class="pill">DEMO</span></span><span class="row"><button class="ic" style="width:34px;height:34px" data-a="hide" aria-label="Bakiyeyi gizle/göster">${I('eye')}</button><button class="btn g sm" data-a="reset">Demo verileri sıfırla</button></span></div>
+<div class="big" style="margin:10px 0">${hid(money(total()))}</div><div>${chg(1.84)} <span class="mu">son 24 saat (demo)</span></div></div>
+<div class="card"><b>Asset Allocation</b><div style="margin-top:12px">${donut()}</div></div></div>
+<div class="grid" style="margin-top:16px">${qa()}<div class="grid g2">${chartCard()}<div class="card"><b>Recent Transactions</b>${S.tx.slice(0,4).map(t=>`<div class="row sp" style="padding:10px 0;border-bottom:1px solid var(--bd)"><span><b>${t.t}</b> <span class="mu">${t.q} ${t.a}</span></span><button class="btn g sm" data-a="txd" data-id="${t.id}">Detay</button></div>`).join('')}</div></div>
+<div><b style="display:block;margin-bottom:10px">Market Overview</b>${marketGrid()}</div></div>`},
+wallet(){const b=S.bal.BTC;return `<div class="grid g2"><div class="card gl"><span class="mu">Toplam portföy</span><div class="big">${hid(money(total()))}</div><div class="row" style="margin-top:16px"><span class="coin" style="width:46px;height:46px">BTC</span><div><b style="font-size:22px">${hid(b.toFixed(4))} BTC</b><div class="mu">${hid(money(b*cp('BTC')))}</div></div></div><div class="row wrap" style="margin-top:16px"><button class="btn" data-a="act" data-k="recv">Receive</button><button class="btn g" data-a="act" data-k="send">Send</button></div><div class="warn">Demo cüzdan: adresler örnektir, gerçek blokzincir işlemi yapılmaz, özel anahtar/seed istenmez.</div></div>
+<div class="card"><b>Son hareketler</b>${S.tx.slice(0,5).map(t=>`<div class="row sp" style="padding:10px 0;border-bottom:1px solid var(--bd)"><span>${t.t} ${t.a}</span><span class="mu">${t.q}</span></div>`).join('')}</div></div>
+<div class="grid g6" style="margin-top:16px">${Object.entries(S.bal).map(([k,v])=>`<div class="card" style="padding:14px"><span class="coin">${k==='USD'?'$':k}</span><div style="margin-top:8px"><b>${hid(v.toLocaleString('en-US',{maximumFractionDigits:4}))}</b> ${k}</div><div class="mu">${hid(money(v*cp(k)))}</div></div>`).join('')}</div>`},
+markets(){return `<div class="row wrap" style="margin-bottom:12px"><input class="in" id="ms" placeholder="Coin ara" aria-label="Coin ara" style="max-width:240px"><select class="in" id="mo" style="max-width:200px" aria-label="Sırala"><option value="cap">Piyasa değeri</option><option value="p">Fiyat</option><option value="c">Günlük değişim</option></select><button class="btn g" data-a="sortd">Sıra ↕</button><button class="btn ${live?'':'g'}" data-a="live">${live?'Demo moda dön':'Canlı fiyatı aç'}</button><span class="badge">${live?'Canlı fiyat · CoinGecko · '+liveT:'DEMO veri'}</span></div>
+<div class="card"><div class="tr mk h"><span></span><span>Varlık</span><span>Fiyat</span><span>24s</span><span class="hm">Piyasa değeri</span><span class="hm">Hacim</span><span class="hm">Grafik</span></div><div id="ml"></div></div>`},
+trade(){return `<div class="grid g3">${[['buy','Buy Crypto','USD ile coin satın al'],['sell','Sell Crypto','Coin sat, USD al'],['swap','Swap','Varlıkları birbirine çevir']].map(x=>`<div class="card"><h3>${x[1]}</h3><p class="mu" style="margin:6px 0 14px">${x[2]}</p><button class="btn" data-a="act" data-k="${x[0]}">Başlat</button></div>`).join('')}</div><div class="warn">Tüm işlemler demo bakiyeleri üzerinde simüle edilir. Komisyon: %0.5 (örnek). Gerçek finansal işlem yapılmaz.</div>`},
+transactions(){return `<div class="row wrap" style="margin-bottom:12px"><input class="in" id="ts" placeholder="Ara" aria-label="Ara" style="max-width:200px"><select class="in" id="tt" style="max-width:150px" aria-label="Tür"><option value="">Tüm türler</option>${['Buy','Sell','Send','Receive','Swap'].map(x=>`<option>${x}</option>`).join('')}</select><select class="in" id="tc" style="max-width:150px" aria-label="Coin"><option value="">Tüm coinler</option>${Object.keys(S.bal).map(x=>`<option>${x}</option>`).join('')}</select><select class="in" id="td" style="max-width:170px" aria-label="Tarih"><option value="0">Tüm zamanlar</option><option value="7">Son 7 gün</option><option value="30">Son 30 gün</option></select><button class="btn" data-a="csv">CSV indir</button></div><div class="card"><div class="tr h"><span>İşlem</span><span class="hm">Tarih</span><span>Miktar</span><span>Tutar</span><span>Durum</span><span></span></div><div id="tl"></div></div>`},
+analytics(){const rows=Object.entries(S.bal).filter(([k,v])=>k!=='USD'&&v>0).map(([k,v])=>{const c=COINS.find(x=>x.s===k),val=v*c.p,cost=val/(1+c.m/100);return {k,val,pl:val-cost,m:c.m}}).sort((a,b)=>b.m-a.m);
+const pl=rows.reduce((a,r)=>a+r.pl,0),vol=S.tx.reduce((a,t)=>a+t.u,0),mx=Math.max(...rows.map(r=>r.val));
+return `<div class="grid g3"><div class="card"><span class="mu">30G Kâr/Zarar (demo)</span><div class="big" style="font-size:30px">${money(pl)}</div></div><div class="card"><span class="mu">İşlem hacmi</span><div class="big" style="font-size:30px">${money(vol)}</div></div><div class="card"><span class="mu">En iyi / en düşük</span><div style="font-size:20px;font-weight:700">${rows[0].k} ${chg(rows[0].m)}<br>${rows[rows.length-1].k} ${chg(rows[rows.length-1].m)}</div></div></div>
+<div class="grid g2" style="margin-top:16px">${chartCard()}<div class="card"><b>Varlık bazında değer</b>${rows.map(r=>`<div style="margin-top:12px"><div class="row sp"><span>${r.k}</span><span class="mu">${money(r.val,0)} · K/Z ${money(r.pl,0)}</span></div><div class="bar" style="width:${r.val/mx*100}%"></div></div>`).join('')}</div></div>${barCard()}<div class="warn">Hesaplamalar demo verilere dayanır ve yatırım tavsiyesi değildir. K/Z, 30 günlük demo değişimden türetilir.</div>`},
+cards(){return `<div class="grid g2"><div><div class="ccard ${S.frozen?'fz':''}"><div class="row sp">${LOGO(36)}<b style="letter-spacing:.14em">REAPER BANK</b></div><div style="font-size:20px;letter-spacing:.12em">${S.cardHide?'•••• •••• •••• 0000':'0000 0000 0000 0000'}</div><div class="row sp"><span>DEMO KULLANICI</span><span>${S.cardHide?'••/••':'12/30'}</span><span class="pill">${S.frozen?'DONDURULDU':'DEMO'}</span></div></div>
+<div class="row wrap" style="margin-top:14px"><button class="btn g" data-a="cardhide">${S.cardHide?'Göster':'Gizle'}</button><button class="btn" data-a="freeze">${S.frozen?'Kartı aç':'Kartı dondur'}</button><button class="btn g" data-a="addcard">Kart ekle</button></div></div>
+<div class="card"><b>Sanal kart</b><p class="mu" style="margin-top:8px">Bu kart yalnızca arayüz örneğidir. Gerçek kart çıkarma, ödeme işleme, kart numarası veya CVV üretimi yoktur. Marka olarak özgün bir şema kullanılmıştır.</p></div></div>`},
+settings(){return `<div class="grid g2"><div class="card"><b>Profil & Tercihler</b><label class="mu" for="sn" style="display:block;margin-top:12px">Ad</label><input id="sn" class="in" value="Demo Kullanıcı" maxlength="40"><label class="mu" for="sl" style="display:block;margin-top:12px">Dil</label><select id="sl" class="in"><option>Türkçe</option><option>English</option></select><label class="mu" for="sc" style="display:block;margin-top:12px">Para birimi</label><select id="sc" class="in"><option>USD</option></select><label class="row" style="margin-top:12px"><input type="checkbox" checked> Bildirimler</label><label class="row"><input type="checkbox" checked> Gizlilik: bakiyeyi paylaşma</label><button class="btn" style="margin-top:12px" data-a="saveset">Kaydet</button></div>
+<div class="card"><b>Hesap</b><div class="row wrap" style="margin-top:12px"><button class="btn g" data-a="reset">Demo verilerini sıfırla</button><button class="btn" data-a="logout">Oturumu kapat</button></div><div class="warn">Tema: Siyah & Beyaz (varsayılan). Gerçek hesap bilgisi saklanmaz.</div></div>
+<div class="card"><b>Güvenlik (demo)</b>${[['İki adımlı doğrulama','Örnek: Açık'],['Son giriş','Bugün (demo oturum)'],['Cihaz','Bu tarayıcı'],['Oturum süresi','Sekme kapanınca biter']].map(x=>`<div class="row sp" style="padding:10px 0;border-bottom:1px solid var(--bd)"><span class="mu">${x[0]}</span><span>${x[1]}</span></div>`).join('')}<div class="warn">Bu değerler arayüz örneğidir; gerçek güvenlik denetimi için backend gerekir.</div></div></div>`},
+help(){return `<div class="card" style="max-width:720px"><h3>Demo modunun sınırları</h3><ul style="margin:10px 0 0 18px" class="mu"><li>Tüm bakiye, fiyat ve işlemler simülasyondur.</li><li>Gerçek banka, blokzincir, kart veya OAuth bağlantısı yoktur.</li><li>Gerçek kullanım için güvenli backend, yetkilendirme, denetim kayıtları, KYC/AML uyumu ve lisanslı cüzdan/ödeme sağlayıcısı gerekir.</li><li>API anahtarlarını asla frontend koduna koymayın.</li></ul><h3 style="margin-top:18px">Yayınlama</h3><p class="mu">Bu dosyayı <b>index.html</b> adıyla GitHub deposuna yükleyin; GitHub Pages (Settings → Pages) veya Netlify'a sürükleyip bırakın. Build gerekmez.</p></div>`}};
+
+/* ---------- LISTS ---------- */
+function marketList(){const q=($('#ms')||{value:''}).value.toLowerCase(),k=sortK;let l=COINS.filter(c=>(c.n+c.s).toLowerCase().includes(q));
+l.sort((a,b)=>(a[k]-b[k])*sortD||0);
+$('#ml').innerHTML=l.map(c=>`<div class="tr mk" style="cursor:pointer" data-a="coin" data-s="${c.s}"><button data-a="fav" data-s="${c.s}" aria-label="Favori" style="color:${S.fav.includes(c.s)?'#fff':'#52525b'}">${I('star')}</button><div class="row"><span class="coin">${c.s}</span><b>${c.n}</b></div><span>${money(c.p,c.p<10?3:0)}</span>${chg(c.c)}<span class="mu hm">${money(c.cap/1e9,1)}B</span><span class="mu hm">${money(c.vol/1e9,1)}B</span><span class="hm">${spark(c,c.s.charCodeAt(1)*7)}</span></div>`).join('')||'<p class="mu" style="padding:20px">Sonuç bulunamadı.</p>'}
+function txList(){const q=($('#ts').value||'').toLowerCase(),t=$('#tt').value,c=$('#tc').value,d=+$('#td').value;
+const l=S.tx.filter(x=>(!t||x.t===t)&&(!c||x.a===c)&&(!d||Date.now()-x.d<d*864e5)&&(x.t+x.a+x.s).toLowerCase().includes(q));
+$('#tl').innerHTML=l.map(txRow).join('')||'<p class="mu" style="padding:20px">Bu filtreyle işlem yok.</p>'}
+
+/* ---------- MODALS ---------- */
+const addr=s=>({BTC:'bc1qdemo0000exampleaddress000000reaper',ETH:'0xDEMO000000000000000000000000000000REAPER'}[s]||'DEMO-'+s+'-EXAMPLE-ADDRESS-0000');
+const opts=(l,sel)=>l.map(x=>`<option ${x===sel?'selected':''}>${x}</option>`).join('');
+const AS=()=>Object.keys(S.bal);
+function modal(h){closeM();const m=document.createElement('div');m.className='modalbg';m.id='mb';m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');m.innerHTML=`<div class="modal">${h}<div class="warn">DEMO: Gerçek finansal işlem veya blokzincir transferi yapılmaz.</div></div>`;m.addEventListener('mousedown',e=>{if(e.target===m)closeM()});document.body.appendChild(m);const f=m.querySelector('input,select');f&&f.focus()}
+const closeM=()=>{const m=$('#mb');m&&m.remove()};
+const head=t=>`<div class="row sp"><h2>${t}</h2><button class="btn g sm" data-a="close" aria-label="Kapat">✕</button></div>`;
+function act(k){const C=COINS.map(c=>c.s);
+const f=(a,b)=>`<label for="${a}">${b}</label>`;
+if(k==='add')modal(head('Add Funds')+f('m1','Tutar (USD, demo)')+`<input id="m1" class="in" type="number" min="1" step="any"><div class="err" id="me"></div><button class="btn" style="width:100%" data-a="do" data-k="add">Onayla</button>`);
+if(k==='buy')modal(head('Buy Crypto')+f('m1','Coin')+`<select id="m1" class="in">${opts(C.filter(x=>x!=='USDT')).replace('>BTC','selected>BTC')}</select>`+f('m2',`Harcanacak USD (bakiye: ${money(S.bal.USD)})`)+`<input id="m2" class="in" type="number" min="0" step="any"><div class="mu" id="pv" style="margin-top:8px"></div><div class="err" id="me"></div><button class="btn" style="width:100%" data-a="do" data-k="buy">Onayla</button>`);
+if(k==='sell')modal(head('Sell Crypto')+f('m1','Coin')+`<select id="m1" class="in">${opts(AS().filter(x=>x!=='USD'))}</select>`+f('m2','Miktar')+`<input id="m2" class="in" type="number" min="0" step="any"><div class="mu" id="pv" style="margin-top:8px"></div><div class="err" id="me"></div><button class="btn" style="width:100%" data-a="do" data-k="sell">Onayla</button>`);
+if(k==='swap')modal(head('Swap')+f('m1','Gönder')+`<select id="m1" class="in">${opts(AS(),'ETH')}</select><button class="btn g sm" style="margin-top:8px" data-a="flip">⇅ Ters çevir</button>`+f('m3','Al')+`<select id="m3" class="in">${opts(AS(),'BTC')}</select>`+f('m2','Miktar')+`<input id="m2" class="in" type="number" min="0" step="any"><div class="mu" id="pv" style="margin-top:8px"></div><div class="err" id="me"></div><button class="btn" style="width:100%" data-a="do" data-k="swap">Onayla</button>`);
+if(k==='send')modal(head('Send')+f('m1','Varlık')+`<select id="m1" class="in">${opts(AS().filter(x=>x!=='USD'),'BTC')}</select>`+f('m3','Alıcı adresi (yalnızca arayüzde kullanılır)')+`<input id="m3" class="in" maxlength="80" autocomplete="off">`+f('m2','Tutar')+`<input id="m2" class="in" type="number" min="0" step="any"><div class="mu" id="pv" style="margin-top:8px"></div><div class="err" id="me"></div><button class="btn" style="width:100%" data-a="do" data-k="send">Onayla</button>`);
+if(k==='recv'){modal(head('Receive')+f('m1','Coin')+`<select id="m1" class="in">${opts(C.filter(x=>x!=='USDT').concat('USDT'))}</select><div id="qr" style="margin:14px 0"></div><div class="row"><code id="ad" style="word-break:break-all;flex:1"></code><button class="btn g sm" data-a="copy">Kopyala</button></div><p class="mu" style="margin-top:8px" id="net"></p><p class="warn">Bu adres ve QR görseli ÖRNEKTİR (taranamaz). Buraya gerçek varlık göndermeyin.</p>`);recv()}
+}
+function recv(){const s=$('#m1').value,a=addr(s);$('#ad').textContent=a;$('#net').textContent='Ağ: '+(s==='BTC'?'Bitcoin':s==='ETH'||s==='USDT'?'Ethereum (ERC-20)':s)+' · DEMO';
+const r=rng([...a].reduce((x,c)=>x+c.charCodeAt(0),7)),n=21;let c='';for(let y=0;y<n;y++)for(let x=0;x<n;x++){const fin=(x<7&&y<7)||(x>13&&y<7)||(x<7&&y>13);if(fin?(x%6==0||y%6==0||(x%6>1&&x%6<5&&y%6>1&&y%6<5)):r()>.5)c+=`<rect x="${x}" y="${y}" width="1" height="1"/>`}
+$('#qr').innerHTML=`<svg width="150" height="150" viewBox="-1 -1 23 23" style="background:#fff;padding:6px;border-radius:12px" fill="#000" aria-label="Örnek QR (demo, taranamaz)">${c}</svg>`}
+function preview(){const k=$('#m1'),a=+($('#m2')||{}).value;if(!$('#pv')||!k)return;const s=k.value;let t='';
+if(!(a>0)){$('#pv').textContent='';return}
+const m=$('.modal').innerText;
+if(m.includes('Buy Crypto'))t=`Tahmini: ${(a*(1-FEE)/cp(s)).toFixed(6)} ${s} · Komisyon ${money(a*FEE)}`;
+else if(m.includes('Sell Crypto'))t=`Tahmini: ${money(a*cp(s)*(1-FEE))} · Komisyon ${money(a*cp(s)*FEE)}`;
+else if(m.includes('Swap')){const d=$('#m3').value;t=`Tahmini: ${(a*cp(s)/cp(d)*(1-FEE)).toFixed(6)} ${d} · Oran 1 ${s} = ${(cp(s)/cp(d)).toFixed(6)} ${d}`}
+else t=`≈ ${money(a*cp(s))}`;$('#pv').textContent=t}
+function doAct(k){const E=m=>{$('#me').textContent=m},v=id=>$(id)&&$(id).value,a=+v('#m2'),b=S.bal;
+if(k==='add'){const x=+v('#m1');if(!(x>0))return E('Geçerli bir tutar girin.');b.USD+=x;addTx('Receive','USD',x,x,'Demo bakiye eklendi');}
+else{const s=v('#m1');if(!(a>0))return E('Geçerli bir miktar girin.');
+if(k==='buy'){if(a>b.USD)return E('Yetersiz USD bakiyesi.');const q=a*(1-FEE)/cp(s);b.USD-=a;b[s]+=q;addTx('Buy',s,+q.toFixed(6),a,'Demo alış: '+q.toFixed(6)+' '+s)}
+if(k==='sell'){if(a>b[s])return E('Yetersiz '+s+' bakiyesi.');const u=a*cp(s)*(1-FEE);b[s]-=a;b.USD+=u;addTx('Sell',s,a,u,'Demo satış: '+a+' '+s)}
+if(k==='swap'){const d=v('#m3');if(s===d)return E('Farklı varlıklar seçin.');if(a>b[s])return E('Yetersiz '+s+' bakiyesi.');const q=a*cp(s)/cp(d)*(1-FEE);b[s]-=a;b[d]+=q;addTx('Swap',s,a,a*cp(s),'Demo swap: '+s+' → '+d)}
+if(k==='send'){const ad=v('#m3').trim();if(!/^[A-Za-z0-9\-]{10,80}$/.test(ad))return E('Geçersiz adres (10-80 harf/rakam/tire).');if(a>b[s])return E('Yetersiz '+s+' bakiyesi.');b[s]-=a;addTx('Send',s,a,a*cp(s),'Demo gönderim: '+a+' '+s)}}
+for(const x in b)b[x]=Math.max(0,+b[x].toFixed(8));save();closeM();toast('Demo işlem tamamlandı');render()}
+
+/* ---------- CORE ---------- */
+function render(){const r=$('#root');if(!auth){r.innerHTML=loginView();return}
+r.innerHTML=shell();$('#view').innerHTML=V[page]();
+if(page==='markets'){marketList();$('#ms').oninput=marketList;$('#mo').onchange=e=>{sortK=e.target.value;marketList()}}
+if(page==='transactions'){txList();['ts','tt','tc','td'].forEach(i=>$('#'+i).addEventListener('input',txList))}
+const svg=$('#pc');if(svg){svg.onpointermove=e=>{const bx=svg.getBoundingClientRect(),f=Math.min(1,Math.max(0,(e.clientX-bx.left)/bx.width)),i=Math.round(f*(window._cv.length-1)),dt=new Date(Date.now()-(1-i/(window._cv.length-1))*window._cd*864e5);$('#tip').innerHTML=`${dt.toLocaleDateString('tr-TR')} — <b style="color:#fff">${money(window._cv[i])}</b> <span class="pill">demo</span>`}}
+$('#gs').oninput=e=>{if(e.key!=='x'&&e.target.value&&page!=='markets'){page='markets';render();$('#ms').value=e.target.value;marketList();}}}
+function csv(){const rows=[['ID','Tür','Varlık','Miktar','USD','Tarih','Durum']].concat(S.tx.map(t=>[t.id,t.t,t.a,t.q,t.u.toFixed(2),new Date(t.d).toISOString(),t.s]));
+const b=new Blob(['\ufeff'+rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n')],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='reaper-demo-islemler.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t){if(pop&&!e.target.closest('.pop')){pop=null;render()}return}
+const a=t.dataset.a;if(a==='coin'&&e.target.closest('[data-a="fav"]'))return;
+const A={
+go(){page=t.dataset.p;pop=null;$('#sb')&&$('#sb').classList.remove('open');render()},sb(){$('#sb').classList.toggle('open')},
+hide(){S.hide=!S.hide;save();render()},range(){range=t.dataset.r;render()},act(){act(t.dataset.k)},close:closeM,do(){doAct(t.dataset.k)},
+flip(){const x=$('#m1').value;$('#m1').value=$('#m3').value;$('#m3').value=x;preview()},
+copy(){navigator.clipboard.writeText($('#ad').textContent).then(()=>toast('Demo adres kopyalandı'),()=>toast('Kopyalama başarısız'))},
+fav(){const s=t.dataset.s;S.fav=S.fav.includes(s)?S.fav.filter(x=>x!==s):S.fav.concat(s);save();marketList()},
+sortd(){sortD*=-1;marketList()},csv,
+coin(){const c=COINS.find(x=>x.s===t.dataset.s),v=series(40,c.p,.05,c.s.charCodeAt(0)*11,c.c>=0?.003:-.003);modal(head(c.n+' ('+c.s+')')+`<div class="big" style="font-size:30px;margin-top:8px">${money(c.p,c.p<10?3:0)}</div>${chg(c.c)} <span class="pill">${live?'Canlı fiyat · grafik simülasyon':'DEMO veri'}</span><svg viewBox="0 0 400 140" width="100%" style="height:140px;margin:12px 0" preserveAspectRatio="none">${line(v,400,140,c.c>=0?'#34D399':'#F87171')}</svg><p class="mu">${c.d}</p><p class="mu" style="margin-top:6px">Piyasa değeri ${money(c.cap/1e9,1)}B · Hacim ${money(c.vol/1e9,1)}B</p>`)},
+txd(){const x=S.tx.find(y=>y.id==t.dataset.id);modal(head('İşlem #'+x.id)+`<p>Tür: <b>${esc(x.t)}</b></p><p>Varlık: ${esc(x.a)}</p><p>Miktar: ${x.q}</p><p>Tutar: ${money(x.u)}</p><p>Tarih: ${new Date(x.d).toLocaleString('tr-TR')}</p><p>Durum: ${esc(x.s)}</p>`)},
+notif(){pop=pop==='n'?null:'n';render()},prof(){pop=pop==='p'?null:'p';render()},
+readall(){S.notif.forEach(n=>n.r=1);save();render()},
+cardhide(){S.cardHide=!S.cardHide;save();render()},freeze(){S.frozen=!S.frozen;save();render()},
+addcard(){modal(head('Kart ekle')+`<p class="mu" style="margin:10px 0">Demo: gerçek kart numarası girmeyin. Gerçek kart çıkarma bu arayüzde yoktur.</p><label for="cn">Kart adı</label><input id="cn" class="in" maxlength="30"><button class="btn" style="width:100%;margin-top:14px" data-a="close">Tamam (demo)</button>`)},
+saveset(){toast('Tercihler kaydedildi (demo)')},
+reset(){S=seed0();save();render();toast('Demo verileri sıfırlandı')},
+async logout(){pop=null;guest=false;if(sb&&user){try{await sb.auth.signOut()}catch(e){}}user=null;auth=false;render()},async oauth(){if(!sb)return toast('Kimlik doğrulama yapılandırılmadı (config.js)');const r=await sb.auth.signInWithOAuth({provider:t.dataset.p,options:{redirectTo:location.origin+location.pathname}});if(r.error)toast(r.error.message)},async forgot(){e.preventDefault();if(!sb)return toast('Kimlik doğrulama yapılandırılmadı');const em=$('#em').value.trim();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em))return $('#le').textContent='Önce e-posta adresinizi girin.';const r=await sb.auth.resetPasswordForEmail(em,{redirectTo:location.origin+location.pathname});toast(r.error?r.error.message:'Sıfırlama e-postası gönderildi')},
+live(){setLive(!live)},aper(){aper=t.dataset.v;render()},guest(){e.preventDefault();guest=true;auth=true;page='overview';render()},togreg(){e.preventDefault();reg=!reg;render()},
+showpw(){const p=$('#pw');p.type=p.type==='password'?'text':'password';t.textContent=p.type==='password'?'Göster':'Gizle'}};
+A[a]&&A[a]()});
+document.addEventListener('input',e=>{if(e.target.closest('.modal')){const id=e.target.id;if(id==='m1'&&$('#qr'))recv();else preview()}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeM();if(pop){pop=null;render()}}});
+async function doLogin(){const E=m=>{$('#le').textContent=m};if(!sb)return E('Kimlik doğrulama yapılandırılmadı (config.js).');
+const em=$('#em').value.trim(),pw=$('#pw').value;
+if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em))return E('Geçerli bir e-posta girin.');
+if(pw.length<8)return E('Şifre en az 8 karakter olmalı.');
+E('');try{if(reg){const r=await sb.auth.signUp({email:em,password:pw,options:{emailRedirectTo:location.origin+location.pathname}});if(r.error)return E(r.error.message);if(!r.data.session)return E('Doğrulama e-postası gönderildi. E-postanızı onaylayıp giriş yapın.')}
+else{const r=await sb.auth.signInWithPassword({email:em,password:pw});if(r.error)return E(r.error.message)}}catch(e){E('Bağlantı hatası: '+e.message)}}
+document.addEventListener('click',e=>{if(e.target.closest('[data-a="login"]'))doLogin()});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.closest('#lf'))doLogin()});
+if(sb){sb.auth.getSession().then(r=>{const x=r.data&&r.data.session;user=x?x.user:null;auth=!!x;render()}).catch(()=>render());
+sb.auth.onAuthStateChange((ev,x)=>{if(guest)return;const was=auth;user=x?x.user:null;auth=!!x;if(auth!==was){if(auth)page='overview';render()}})}
+render();
+</script>
+</body>
+</html>
